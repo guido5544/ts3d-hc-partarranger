@@ -221,9 +221,9 @@ export class PartArranger {
     }
 
     async _getObjectBounding(nodeid) {
-        let bounds = await hwv.model.getNodesBounding([nodeid]);
+        let bounds = await this._viewer.model.getNodesBounding([nodeid]);
         
-        let matrix = Communicator.Matrix.inverse(hwv.model.getNodeNetMatrix(nodeid));
+        let matrix = Communicator.Matrix.inverse(this._viewer.model.getNodeNetMatrix(nodeid));
         let boxcorners = bounds.getCorners();
         let boxtransformed = [];
         matrix.transformArray(boxcorners, boxtransformed);
