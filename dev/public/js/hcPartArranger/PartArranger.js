@@ -47,6 +47,9 @@ export class PartArranger {
         let leafArray = [];
 
         let r = this._viewer.selectionManager.getResults();
+        if (r.length == 0) {
+            r.push(new Communicator.Selection.SelectionItem(this._viewer.model.getRootNode()));
+        }
         for (let n = 0; n < r.length; n++) {
             let rootNode = r[n].getNodeId();
             let ident = new Communicator.Matrix();
@@ -450,7 +453,7 @@ class PartArrangerAnim
     update(timestamp, viewer) {        
 
         this._anime.tick(timestamp);
-        let v = parseInt(this._value) / 100;
+        let v = this._value / 100.0;
        
         let currentpos = Communicator.Point3.add(this._startpos, Communicator.Point3.scale(this._delta, v*this._deltalength));
         
