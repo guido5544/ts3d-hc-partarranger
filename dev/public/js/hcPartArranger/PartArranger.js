@@ -16,6 +16,7 @@ export class PartArranger {
 
         this._relativeScale = false;
         this._scaleFactor = 0.04;
+        this._stackInPlace = false;
     
     }
 
@@ -35,6 +36,9 @@ export class PartArranger {
         this._scaleFactor = scale;
     }
 
+    setStackInPlace(onoff) {
+        this._stackInPlace = onoff;
+    }
 
     reset() {
         this._viewer.model.resetNodesTransform();
@@ -292,13 +296,25 @@ export class PartArranger {
         let scalemat = new Communicator.Matrix();
         scalemat.setScaleComponent(mbextents, mbextents, mbextents);
         let transmat = new Communicator.Matrix();
-        if (upVector.z > 0) {
-            transmat.setTranslationComponent(0, bounds.min.y - l * mbextents * 1.1, this._mbounds.min.z);
+        if (this._stackInPlace) {
+            if (upVector.z > 0) {
+                transmat.setTranslationComponent(0, (bounds.min.y + bounds.max.y) / 2,  (bounds.min.z + bounds.max.z) / 2);
+            }
+            else
+            {
+                transmat.setTranslationComponent(  (bounds.min.x + bounds.max.x) / 2, (bounds.min.y + bounds.max.y) / 2, 0);
+    
+            }
         }
-        else
-        {
-            transmat.setTranslationComponent( bounds.min.x - l * mbextents * 1.1,this._mbounds.min.y, 0);
-
+        else {
+            if (upVector.z > 0) {
+                transmat.setTranslationComponent(0, bounds.min.y - l * mbextents * 1.1, this._mbounds.min.z);
+            }
+            else
+            {
+                transmat.setTranslationComponent( bounds.min.x - l * mbextents * 1.1,this._mbounds.min.y, 0);
+    
+            }
         }
         let extramat = Communicator.Matrix.multiply(scalemat, transmat);
 
